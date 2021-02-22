@@ -1,0 +1,116 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ShapeModule Remote Debug (Python)",
+      "type": "python",
+      "request": "attach",
+      "port": 5678,
+      "host": "localhost",
+      "logToFile": true,
+      "redirectOutput": true,
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/modules/ShapeModule",
+          "remoteRoot": "/app"
+        }
+      ],
+      "windows": {
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}\\modules\\ShapeModule",
+            "remoteRoot": "/app"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ShapeModule Local Debug (Python)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/modules/ShapeModule/main.py",
+      "console": "integratedTerminal",
+      "env": {
+        "EdgeHubConnectionString": "${config:azure-iot-edge.EdgeHubConnectionString}",
+        "EdgeModuleCACertificateFile": "${config:azure-iot-edge.EdgeModuleCACertificateFile}"
+      },
+      "windows": {
+        "program": "${workspaceFolder}\\modules\\ShapeModule\\main.py"
+      }
+    },
+    {
+      "name": "ColorModule Remote Debug (Python)",
+      "type": "python",
+      "request": "attach",
+      "port": 5678,
+      "host": "localhost",
+      "logToFile": true,
+      "redirectOutput": true,
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/modules/ColorModule",
+          "remoteRoot": "/app"
+        }
+      ],
+      "windows": {
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}\\modules\\ColorModule",
+            "remoteRoot": "/app"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ColorModule Local Debug (Python)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/modules/ColorModule/main.py",
+      "console": "integratedTerminal",
+      "env": {
+        "EdgeHubConnectionString": "${config:azure-iot-edge.EdgeHubConnectionString}",
+        "EdgeModuleCACertificateFile": "${config:azure-iot-edge.EdgeModuleCACertificateFile}"
+      },
+      "windows": {
+        "program": "${workspaceFolder}\\modules\\ColorModule\\main.py"
+      }
+    },
+    {
+      "name": "ConnectionModule Remote Debug (Python)",
+      "type": "python",
+      "request": "attach",
+      "port": 5678,
+      "host": "localhost",
+      "logToFile": true,
+      "redirectOutput": true,
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/modules/ConnectionModule",
+          "remoteRoot": "/app"
+        }
+      ],
+      "windows": {
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}\\modules\\ConnectionModule",
+            "remoteRoot": "/app"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConnectionModule Local Debug (Python)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/modules/ConnectionModule/main.py",
+      "console": "integratedTerminal",
+      "env": {
+        "EdgeHubConnectionString": "${config:azure-iot-edge.EdgeHubConnectionString}",
+        "EdgeModuleCACertificateFile": "${config:azure-iot-edge.EdgeModuleCACertificateFile}"
+      },
+      "windows": {
+        "program": "${workspaceFolder}\\modules\\ConnectionModule\\main.py"
+      }
+    }
+  ]
+}
