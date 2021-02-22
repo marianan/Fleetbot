@@ -1,4 +1,4 @@
-Name: Fleetbot
+name: Fleetbot
 on:
   issue_comment:
     types: [created]
