@@ -1,4 +1,4 @@
-Name: Fleetbot
+name: Fleetbot
 on:
   issue_comment:
     types: [created]
@@ -13,7 +13,3 @@ jobs:
         if: contains(github.event.comment.body, '/deploy')
         run: |
           echo "Running it down."
-      - name: checkCommand
-        if: contains(github.event.comment.body, '/check')
-        run: |
-          echo "Checking..."
