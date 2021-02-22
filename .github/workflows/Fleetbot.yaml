@@ -1,0 +1,15 @@
+Name: Fleetbot
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  fromPullRequest:
+    # If the URL come from a pull request PR
+    if: contains(github.event.comment.html_url, '/pull/')
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: deployCommand
+        if: contains(github.event.comment.body, '/deploy')
+        run: |
+          echo "Running it down."
