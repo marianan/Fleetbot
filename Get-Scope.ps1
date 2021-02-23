@@ -7,7 +7,10 @@ function Get-Scope-Array {
         Get-Scope-Array -currentRelativePath $(Split-Path $currentRelativePath)        
     }
 
-    Split-Path -Leaf $currentRelativePath  
+    $scope = $(Split-Path -Leaf $currentRelativePath).Split('.')[0]
+    if(-not $scope.Contains('device')) {
+        $scope
+    }    
 }
 
 Set-Location C:\Work\Git\Fleetbot\deploy
@@ -15,7 +18,7 @@ $relativeDeviceFolders = $(Get-ChildItem -Recurse -Directory -Filter "*.device")
 $dict = @{}
 
 foreach ($devicePath in $relativeDeviceFolders) {
-    $key = Split-Path -Leaf $devicePath
+    $key = (Split-Path -Leaf $devicePath).Split('.')[0]
     $value = Get-Scope-Array -currentRelativePath ".\global.scope\east.hub\africa.scope\device3.device"
 
     $dict.Add($key, $value)
