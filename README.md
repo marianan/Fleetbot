@@ -18,8 +18,8 @@ device8        europe, west, global
 
 Hub     Deployment name     Priority    Target conditions
 ---     -----------------   --------    ------------------
-east    global-base         1           east
+east    global-base         1           east OR west
 east    global-east-color   2           east
-west    global-base         1           west
+west    global-base         1           east OR west
 west    global-west-color   2           west
 ```
