@@ -19,7 +19,7 @@ $dict = @{}
 
 foreach ($devicePath in $relativeDeviceFolders) {
     $key = (Split-Path -Leaf $devicePath).Split('.')[0]
-    $value = Get-Scope-Array -currentRelativePath ".\global.scope\east.hub\africa.scope\device3.device"
+    $value = Get-Scope-Array -currentRelativePath $devicePath
 
     $dict.Add($key, $value)
 }
