@@ -42,4 +42,5 @@ function Get-Deployment-Scope
             $scopeDeployments.Add($eachValue)
         }
     }
+    $scopeDeployments
 }
