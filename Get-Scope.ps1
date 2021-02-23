@@ -14,7 +14,7 @@ function Get-Scope-Array {
 }
 
 Set-Location C:\Work\Git\Fleetbot\deploy
-$relativeDeviceFolders = $(Get-ChildItem -Recurse -Directory -Filter "*.device") | Resolve-Path -Relative
+$relativeDeviceFolders = $(Get-ChildItem -Recurse -Filter "*.device.json") | Resolve-Path -Relative
 $dict = @{}
 
 foreach ($devicePath in $relativeDeviceFolders) {
