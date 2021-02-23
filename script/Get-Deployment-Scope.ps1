@@ -26,9 +26,10 @@ function Get-Deployment-Scope
         $eachValue.Scope = $keyType[0]
         $eachValue.Type = $keyType[1]
         $eachValue.DeploymentFile = $file
-        # Starting at root depth = 1 (\global.scope)
-        # -1 because the .\ count as an extra line
-        $eachValue.Depth = $($file | Resolve-Path -Relative).Split('\').Count - 1
+        # Starting at root depth = 1 (.\global.scope)
+        # i)  because the .\ count as an extra line
+        # ii) because the root is .\deploy not 
+        $eachValue.Depth = $($file | Resolve-Path -Relative).Split('\').Count - 2
 
         $scopeDeploymentDict.$($keyType[0]) = $eachValue
     }
