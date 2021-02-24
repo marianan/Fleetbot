@@ -1,3 +1,10 @@
+#TODOS:
+# 1. Target conditions
+#   We are thinking for target conditions: If we are 'looking up,' we use the hub as the target condition
+#                                          If we are 'looking down,' we use the immediate parent of the deployment file as the target condition
+# 2. Minor improvements (Todos within the code)
+# 3. Put duplicated code into functions
+
 function Get-Hub-Deployment-Scope
 {
     Set-Location "$(git rev-parse --show-toplevel)\deploy"
@@ -9,10 +16,10 @@ function Get-Hub-Deployment-Scope
     #  Looking up: 
     #  2. each of the hub in hubList has the directory path
     #    2.1 Take the depth of each hub, apply all the deployment files w/ lower depth
+    #    [Exclusive looking up]
     #
     #  Looking down: 
-    #  3.
-
+    #  3. Do the same thing but with all the child deployment files
     $hubDeployments = [System.Collections.ArrayList]@();
     foreach ($hub in $hubList)
     {
@@ -31,12 +38,20 @@ function Get-Hub-Deployment-Scope
             foreach( $baseDeployment in $baseDeployments )
             {
                 #$baseDeployment.FullName
-                $eachValue = New-Object PSObject -Property @{DeploymentFile=""; Priority="" };
+                $eachValue = New-Object PSObject -Property @{DeploymentFile=""; Priority=""; Name="" };
                 $eachValue.Priority = $priority;
                 $eachValue.DeploymentFile = $baseDeployment;
+                $depthOfDeploy = [array]::indexof($baseDeployment.FullName.Split('\'), "deploy") + 1
+                $deployPathList=$baseDeployment.FullName.Split('\')
+                $name = ''
+                foreach($level in $deployPathList[$depthOfDeploy..$deployPathList.length])
+                {
+                    #TODO: This does not allow for things like color.a.deployment.json, since it will just take the 'color'
+                    $name = $name + $level.Split('.')[0] + "-" #TODO pt 2 - fix this naming with an if statement 
+                }
+                $eachValue.Name = $name
                 $priority += 1;
-
-                $scopeDeployments.Add($eachValue);
+                $scopeDeployments.Add($eachValue) > $null
             }
 
             # Assign a higher priority number to the other (non-base) deployment of a given directory
@@ -44,22 +59,79 @@ function Get-Hub-Deployment-Scope
             foreach( $remainingDeployment in $remainingDeployments )
             {
                 #$remainingDeployment.FullName
-                $eachValue = New-Object PSObject -Property @{DeploymentFile=""; Priority="" };
+                $eachValue = New-Object PSObject -Property @{DeploymentFile=""; Priority=""; Name="" };
                 $eachValue.Priority = $priority;
                 $eachValue.DeploymentFile = $remainingDeployment;
+                $depthOfDeploy = [array]::indexof($remainingDeployment.FullName.Split('\'), "deploy") + 1
+                $deployPathList=$remainingDeployment.FullName.Split('\')
+                $name = ''
+                foreach($level in $deployPathList[$depthOfDeploy..$deployPathList.length])
+                {
+                    #TODO: This does not allow for things like color.a.deployment.json, since it will just take the 'color'
+                    $name = $name + $level.Split('.')[0] + "-" #TODO pt 2 - fix this naming with an if statement 
+                }
+                $eachValue.Name = $name
                 $priority += 1;
+                $scopeDeployments.Add($eachValue) > $null
+            }
+        }
 
-                $scopeDeployments.Add($eachValue);
+        #look down
+        #set to hub directory
+        Set-Location $hub.FullName
+        #when looking down, get your own level too, since we didn't do that when looking up
+
+        $deploymentFiles = $(Get-ChildItem -Recurse -Filter "*.deployment.json");
+        foreach($directory in ($deploymentFiles.Directory | Get-Unique))
+        {
+            # Assign the lowest number to the base deployment of a given directory
+            $baseDeployments = $directory | Get-ChildItem -Filter "base.deployment.json";
+            foreach( $baseDeployment in $baseDeployments )
+            {
+                $eachValue = New-Object PSObject -Property @{DeploymentFile=""; Priority=""; Name="" };
+                $eachValue.Priority = $priority;
+                $eachValue.DeploymentFile = $baseDeployment;
+                $depthOfDeploy = [array]::indexof($baseDeployment.FullName.Split('\'), "deploy") + 1
+                $deployPathList=$baseDeployment.FullName.Split('\')
+                $name = ''
+                foreach($level in $deployPathList[$depthOfDeploy..$deployPathList.length])
+                {
+                    #TODO: This does not allow for things like color.a.deployment.json, since it will just take the 'color'
+                    $name = $name + $level.Split('.')[0] + "-" #TODO pt 2 - fix this naming with an if statement 
+                }
+                $eachValue.Name = $name
+                $priority += 1;
+                $scopeDeployments.Add($eachValue) > $null
+            }
+
+            # Assign a higher priority number to the other (non-base) deployment of a given directory
+            $remainingDeployments = $directory | Get-ChildItem -Filter "*.deployment.json" | Where-Object {$_.name -NotMatch "base.deployment.json"};
+            foreach( $remainingDeployment in $remainingDeployments )
+            {
+                $eachValue = New-Object PSObject -Property @{DeploymentFile=""; Priority=""; Name="" };
+                $eachValue.Priority = $priority;
+                $eachValue.DeploymentFile = $remainingDeployment;
+                $depthOfDeploy = [array]::indexof($remainingDeployment.FullName.Split('\'), "deploy") + 1
+                $deployPathList=$remainingDeployment.FullName.Split('\')
+                $name = ''
+                foreach($level in $deployPathList[$depthOfDeploy..$deployPathList.length])
+                {
+                    #TODO: This does not allow for things like color.a.deployment.json, since it will just take the 'color'
+                    $name = $name + $level.Split('.')[0] + "-" #TODO pt 2 - fix this naming with an if statement 
+                }
+                $eachValue.Name = $name
+                $priority += 1;
+                $scopeDeployments.Add($eachValue) > $null
             }
         }
 
         $eachDeployEntry = New-Object PSObject -Property @{Key=""; Value="" };
         $eachDeployEntry.Key = $hub.Name;
         $eachDeployEntry.Value = $scopeDeployments;
-        $hubDeployments.Add($eachDeployEntry);
+        $hubDeployments.Add($eachDeployEntry) > null;
     }
 
-    $hubDeployments
+    return $hubDeployments
 }
 
 
