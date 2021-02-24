@@ -1,0 +1,71 @@
+{
+    "id": "base-deployment",
+    "schemaVersion": null,
+    "labels": {},
+    "content": {
+        "modulesContent": {
+            "$edgeAgent": {
+                "properties.desired": {
+                    "modules": {},
+                    "runtime": {
+                        "settings": {
+                            "minDockerVersion": "v1.25"
+                        },
+                        "type": "docker"
+                    },
+                    "schemaVersion": "1.1",
+                    "systemModules": {
+                        "edgeAgent": {
+                            "settings": {
+                                "image": "mcr.microsoft.com/azureiotedge-agent:1.1",
+                                "createOptions": ""
+                            },
+                            "type": "docker"
+                        },
+                        "edgeHub": {
+                            "settings": {
+                                "image": "mcr.microsoft.com/azureiotedge-hub:1.1",
+                                "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"8883/tcp\":[{\"HostPort\":\"8883\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"443/tcp\":[{\"HostPort\":\"443\"}]}}}"
+                            },
+                            "type": "docker",
+                            "status": "running",
+                            "restartPolicy": "always"
+                        }
+                    }
+                }
+            },
+            "$edgeHub": {
+                "properties.desired": {
+                    "routes": {},
+                    "schemaVersion": "1.1",
+                    "storeAndForwardConfiguration": {
+                        "timeToLiveSecs": 7200
+                    }
+                }
+            }
+        }
+    },
+    "targetCondition": "tags.env='testdeployment'",
+    "createdTimeUtc": "2021-02-22T22:25:28.843Z",
+    "lastUpdatedTimeUtc": "2021-02-22T22:25:28.843Z",
+    "priority": 1,
+    "systemMetrics": {
+        "results": {
+            "targetedCount": 1,
+            "appliedCount": 1,
+            "reportedSuccessfulCount": 0,
+            "reportedFailedCount": 0
+        },
+        "queries": {
+            "Targeted": "select deviceId from devices where capabilities.iotEdge = true and tags.env='testdeployment'",
+            "Applied": "select deviceId from devices.modules where moduleId = '$edgeAgent' and configurations.[[base-deployment]].status = 'Applied'",
+            "Reporting Success": "select deviceId from devices.modules where moduleId = '$edgeAgent' and configurations.[[base-deployment]].status = 'Applied' and properties.desired.$version = properties.reported.lastDesiredVersion and properties.reported.lastDesiredStatus.code = 200",
+            "Reporting Failure": "select deviceId from devices.modules where moduleId = '$edgeAgent' and configurations.[[base-deployment]].status = 'Applied' and properties.desired.$version = properties.reported.lastDesiredVersion and properties.reported.lastDesiredStatus.code != 200"
+        }
+    },
+    "metrics": {
+        "results": {},
+        "queries": {}
+    },
+    "etag": "MQ=="
+}
